@@ -9,6 +9,7 @@ import (
 
 type DiscoveryEndpoints struct {
 	SayHelloEndpoint    endpoint.Endpoint
+	UppercaseEndpoint   endpoint.Endpoint
 	DiscoveryEndpoint   endpoint.Endpoint
 	HealthCheckEndpoint endpoint.Endpoint
 }
@@ -26,6 +27,25 @@ func MakeSayHelloEndpoint(svc service.Service) endpoint.Endpoint {
 		message := svc.SayHello()
 		return SayHelloResponse{
 			Message: message,
+		}, nil
+	}
+}
+
+// uppercase
+type UppercaseRequest struct {
+	Text string
+}
+
+type UppercaseResponse struct {
+	UpperText string `json:"upper_text"`
+}
+
+func MakeUpperEndpoint(svc service.Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(UppercaseRequest)
+		text := svc.Uppercase(req.Text)
+		return UppercaseResponse{
+			UpperText: text,
 		}, nil
 	}
 }

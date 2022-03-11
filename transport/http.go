@@ -34,6 +34,13 @@ func MakeHttpHandler(ctx context.Context, endpoints endpts.DiscoveryEndpoints, l
 		options...,
 	))
 
+	r.Methods("GET").Path("/uppercase").Handler(kithttp.NewServer(
+		endpoints.UppercaseEndpoint,
+		decodeUppercaseRequest,
+		encodeJsonResponse,
+		options...,
+	))
+
 	r.Methods("GET").Path("/discovery").Handler(kithttp.NewServer(
 		endpoints.DiscoveryEndpoint,
 		decodeDiscoveryRequest,
@@ -55,6 +62,16 @@ func MakeHttpHandler(ctx context.Context, endpoints endpts.DiscoveryEndpoints, l
 // decodeSayHelloRequest decode request params to struct
 func decodeSayHelloRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	return endpts.SayHelloRequest{}, nil
+}
+
+func decodeUppercaseRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	text := r.URL.Query().Get("text")
+	if text == "" {
+		return nil, ErrorBadRequest
+	}
+	return endpts.UppercaseRequest{
+		Text: text,
+	}, nil
 }
 
 // decodeDiscoveryRequest decode request params to struct

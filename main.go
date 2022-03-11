@@ -38,7 +38,7 @@ func main() {
 	// 声明服务发现客户端
 	var discoveryClient discover.DiscoveryClient
 
-	discoveryClient, err := discover.NewKitDiscoverClient(*consulHost, *consulPort)
+	discoveryClient, err := discover.NewMyDiscoverClient(*consulHost, *consulPort)
 	// 获取服务发现客户端失败，直接关闭服务
 	if err != nil {
 		config.Logger.Println("Get Consul Client failed")
@@ -55,10 +55,13 @@ func main() {
 	//创建健康检查的Endpoint
 	healthEndpoint := endpoint.MakeHealthCheckEndpoint(svc)
 
+	uppercaseEndpoint := endpoint.MakeUpperEndpoint(svc)
+
 	endpts := endpoint.DiscoveryEndpoints{
 		SayHelloEndpoint:    sayHelloEndpoint,
 		DiscoveryEndpoint:   discoveryEndpoint,
 		HealthCheckEndpoint: healthEndpoint,
+		UppercaseEndpoint:   uppercaseEndpoint,
 	}
 
 	//创建http.Handler

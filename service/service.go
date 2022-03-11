@@ -5,6 +5,7 @@ import (
 	"errors"
 	"micro-playgound/config"
 	"micro-playgound/discover"
+	"strings"
 )
 
 type Service interface {
@@ -12,6 +13,8 @@ type Service interface {
 	HealthCheck() bool
 	// sayHelloService
 	SayHello() string
+	// uppercase
+	Uppercase(text string) string
 	//  discovery service from consul by serviceName
 	DiscoveryService(ctx context.Context, serviceName string) ([]interface{}, error)
 }
@@ -30,6 +33,13 @@ func NewDiscoveryServiceImpl(discoveryClient discover.DiscoveryClient) Service {
 
 func (*DiscoveryServiceImpl) SayHello() string {
 	return "Hello World!"
+}
+
+func (*DiscoveryServiceImpl) Uppercase(text string) string {
+	if text != "" {
+		return strings.ToUpper(text)
+	}
+	return ""
 }
 
 func (service *DiscoveryServiceImpl) DiscoveryService(ctx context.Context, serviceName string) ([]interface{}, error) {
