@@ -8,6 +8,11 @@ type (
 		Name string `json:"name"`
 	}
 )
+
+@server (
+	middleware: Example
+)
+
 service order {
 	@handler getOrder
 	get /api/order/get/:id (OrderReq) returns (OrderReply)
